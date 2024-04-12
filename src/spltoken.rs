@@ -4,7 +4,7 @@ use solana_sdk::{pubkey::Pubkey, signature::Keypair, transaction::Transaction};
 use spl_associated_token_account::get_associated_token_address;
 use spl_associated_token_account::instruction::create_associated_token_account;
 
-pub    fn get_or_create_associated_token_account(
+pub fn get_or_create_associated_token_account(
     client: &RpcClient,
     key_payer: &Keypair,
     wallet_address: &Pubkey,
@@ -39,6 +39,7 @@ pub    fn get_or_create_associated_token_account(
         );
 
         let signature = client.send_and_confirm_transaction(&transaction)?;
+        println!("create ata signature: {}", signature);
         Ok(associated_token_account_address)
     } else {
         Ok(associated_token_account_address)

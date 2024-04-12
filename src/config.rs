@@ -6,7 +6,6 @@ use std::str::FromStr;
 pub const WSS_URL: &str = "wss://api.mainnet-beta.solana.com";
 pub const RPC_URL: &str = "https://api.mainnet-beta.solana.com";
 
-
 pub struct Config {
     pub sender_keypair: Keypair,
 }
@@ -24,9 +23,8 @@ impl Config {
         self.sender_keypair.pubkey()
     }
 }
-pub fn receiver() -> Pubkey {
-    return Pubkey::from_str("TEST").unwrap();
-}
+
+#[allow(non_snake_case)]
 pub fn wSol() -> Pubkey {
     return Pubkey::from_str("So11111111111111111111111111111111111111112").unwrap();
 }
