@@ -2,50 +2,39 @@ mod config;
 mod raydium_sdk;
 mod spltoken;
 mod utils;
+
 use borsh::BorshDeserialize;
-use config::program_id_rv4;
-use config::wSol;
-use config::Config;
+use config::{program_id_rv4, wSol, Config};
 use futures::stream::StreamExt;
-use raydium_sdk::get_associated_authority;
-use raydium_sdk::make_swap_fixed_in_instruction;
-use raydium_sdk::LiquidityPoolKeys;
-use raydium_sdk::LiquiditySwapFixedInInstructionParamsV4;
-use raydium_sdk::MarketStateLayoutV3;
-use raydium_sdk::UserKeys;
+use raydium_sdk::{
+    get_associated_authority, make_swap_fixed_in_instruction, LiquidityPoolKeys,
+    LiquiditySwapFixedInInstructionParamsV4, MarketStateLayoutV3, UserKeys, TOKEN_PROGRAM_ID,
+};
 use serde_json::{Result as JsonResult, Value};
-use solana_client::rpc_client::RpcClient;
 use solana_client::{
     nonblocking::pubsub_client::PubsubClient,
+    rpc_client::RpcClient,
     rpc_config::{RpcTransactionConfig, RpcTransactionLogsConfig, RpcTransactionLogsFilter},
     rpc_response::RpcLogsResponse,
 };
-use solana_sdk::account::Account;
-use solana_sdk::commitment_config::CommitmentConfig;
-use solana_sdk::instruction::Instruction;
-use solana_sdk::pubkey::Pubkey;
-use solana_sdk::signature::Keypair;
-use solana_sdk::signature::Signature;
-use solana_sdk::transaction::Transaction;
-use solana_transaction_status::option_serializer::OptionSerializer;
-use solana_transaction_status::parse_instruction::ParsedInstruction;
-use solana_transaction_status::EncodedConfirmedTransactionWithStatusMeta;
-use solana_transaction_status::EncodedTransaction;
-use solana_transaction_status::UiInnerInstructions;
-use solana_transaction_status::UiInstruction;
-use solana_transaction_status::UiMessage;
-use solana_transaction_status::UiParsedInstruction;
-use solana_transaction_status::UiTransactionEncoding;
-use solana_transaction_status::UiTransactionTokenBalance;
+use solana_sdk::{
+    account::Account,
+    commitment_config::CommitmentConfig,
+    instruction::Instruction,
+    pubkey::Pubkey,
+    signature::{Keypair, Signature},
+    transaction::Transaction,
+};
+use solana_transaction_status::{
+    option_serializer::OptionSerializer, parse_instruction::ParsedInstruction,
+    EncodedConfirmedTransactionWithStatusMeta, EncodedTransaction, UiInnerInstructions,
+    UiInstruction, UiMessage, UiParsedInstruction, UiTransactionEncoding,
+    UiTransactionTokenBalance,
+};
 use spltoken::get_or_create_associated_token_account;
-use std::str::FromStr;
-use std::time::Duration;
+use std::{str::FromStr, time::Duration};
 use tokio::time::sleep;
-use utils::find_log_entry;
-use utils::fix_relaxed_json_in_lp_log_entry;
-use utils::PoolInfo;
-
-use crate::raydium_sdk::TOKEN_PROGRAM_ID;
+use utils::{find_log_entry, fix_relaxed_json_in_lp_log_entry, PoolInfo};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -68,12 +57,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut seen_transactions: Vec<String> = vec![];
 
     println!("My Address: {:?}", &sender);
-    // println!("Subscribed to {}", stream.endpoint());
     loop {
         match stream.next().await {
             Some(response) => {
                 let logs: RpcLogsResponse = response.value;
                 let log_entries = &logs.logs;
+                println!("log_entries: {:#?}", log_entries);
                 if let Some(found_entry) = find_log_entry("init_pc_amount", log_entries) {
                     println!("Found log entry: {}", found_entry);
 

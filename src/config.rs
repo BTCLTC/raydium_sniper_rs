@@ -1,10 +1,12 @@
-use solana_sdk::pubkey::Pubkey;
-use solana_sdk::signature::{Keypair, Signer};
-use std::fs;
-use std::str::FromStr;
+use solana_sdk::{
+    pubkey::Pubkey,
+    signature::{Keypair, Signer},
+};
+use std::{fs, str::FromStr};
 
-pub const WSS_URL: &str = "wss://api.mainnet-beta.solana.com";
-pub const RPC_URL: &str = "https://api.mainnet-beta.solana.com";
+pub const WSS_URL: &str = "wss://solana-mainnet.g.alchemy.com/v2/0XU-8dK4QR34JMpk6457JTlYUC6sCfes";
+pub const RPC_URL: &str =
+    "https://solana-mainnet.g.alchemy.com/v2/0XU-8dK4QR34JMpk6457JTlYUC6sCfes";
 
 pub struct Config {
     pub sender_keypair: Keypair,
